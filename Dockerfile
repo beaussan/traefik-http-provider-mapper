@@ -13,7 +13,7 @@ RUN npm run build
 FROM node:16-alpine
 WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --prod
 COPY --from=appbuild /usr/src/app/dist ./dist
 
 

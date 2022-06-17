@@ -1,8 +1,17 @@
 {
-  "name": "coolify-traefik-adapter",
+  "name": "traefik-http-provider-mapper",
   "version": "1.0.0",
+  "description": "A traefik http provider mapping server to edit an existing http provider",
   "main": "index.js",
   "license": "MIT",
+  "homepage": "https://github.com/beaussan/traefik-http-provider-mapper#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beaussan/traefik-http-provider-mapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/beaussan/traefik-http-provider-mapper/issues"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
