@@ -58,8 +58,11 @@ services:
     networks:
       # Hooks itself into the coolify network that your Traefik instance should be running on
       - coolify
+      - coolify-infra
 networks:
   coolify:
+    external: true
+  coolify-infra:
     external: true
 ```
 
