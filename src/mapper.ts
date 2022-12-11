@@ -9,6 +9,7 @@ export interface MapperProps {
   removeWwwRouters?: boolean;
   removeCoolify?: boolean;
   removeWwwMiddlewares?: boolean;
+  ignoreMiddlewareSites?: string[]
 }
 
 type MapperFunction = (input: TraefikDefinition) => TraefikDefinition;
@@ -37,11 +38,16 @@ const renameEntrypoint = (oldName: string, newName: string): MapperFunction =>
     ),
   }));
 
-const addCustomMiddleware = (middleware: string): MapperFunction =>
-  routerMapper((router) => ({
-    ...router,
-    middlewares: [...router.middlewares, middleware],
-  }));
+const addCustomMiddleware = (middleware: string, ignoreList?: string[]): MapperFunction =>
+  routerMapper((router) => {
+    if (ignoreList && ignoreList.some(ignoreDomain => router.rule.includes(ignoreDomain))) {
+      return router;
+    }
+    return {
+      ...router,
+      middlewares: [...router.middlewares, middleware],
+    }
+  });
 
 const renameHttpEntpoint = (newName: string): MapperFunction =>
   renameEntrypoint('web', newName);
@@ -142,6 +148,7 @@ export const mapper = (
     newCertResolver,
     removeCoolify,
     removeWwwMiddlewares,
+    ignoreMiddlewareSites,
   }: MapperProps,
 ): TraefikDefinition => {
   let newDefinition = inputDefinition;
@@ -176,7 +183,7 @@ export const mapper = (
 
   // adders
   if (addMiddleware) {
-    actions.push(addCustomMiddleware(addMiddleware));
+    actions.push(addCustomMiddleware(addMiddleware, ignoreMiddlewareSites));
   }
   return compose(actions)(newDefinition);
 };

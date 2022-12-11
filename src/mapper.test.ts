@@ -196,6 +196,40 @@ describe('mapper', () => {
     expect(result.http.routers.test2.middlewares).toEqual(['existing', 'auth']);
   });
 
+
+  it('show allow to add a middleware to all routers exept the ignore list', () => {
+    const mock = generateRouters({
+      test1: {
+        entrypoints: ['web'],
+        middlewares: [],
+        rule: 'Host(`www.coolify.example.io`)',
+        service: '',
+      },
+      test2: {
+        entrypoints: ['websecure'],
+        middlewares: ['existing'],
+        rule: 'Host(`coolify.example.io`)',
+        service: '',
+      },
+      test3: {
+        entrypoints: ['websecure'],
+        middlewares: ['existing'],
+        rule: 'Host(`toignore.example.io`)',
+        service: '',
+      },
+    });
+
+    const result = mapper(mock, {
+      addMiddleware: 'auth',
+      ignoreMiddlewareSites: ['toignore.example.io']
+
+    });
+
+    expect(result.http.routers.test1.middlewares).toEqual(['auth']);
+    expect(result.http.routers.test2.middlewares).toEqual(['existing', 'auth']);
+    expect(result.http.routers.test3.middlewares).toEqual(['existing']);
+  });
+
   it('should filter out the coolify router if asked to', () => {
     const mock = generateRouters({
       'test2': {

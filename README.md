@@ -28,11 +28,11 @@ services:
     image: beaussan/traefik-http-provider-mapper
     restart: unless-stopped
     environment:
-      # Required, the address of the coolify server 
+      # Required, the address of the coolify server
       - TRAEFIK_MAPPER_BASE_ENDPOINT=http://coolify:3000/webhooks/traefik/main.json
-        
+
       # All the following are optional
-      
+
       # Replace the web entrypoint with what is provided (eg http here)
       - TRAEFIK_MAPPER_NEW_HTTP_ENTRYPOINT=http
       # Replace the websecure entrypoint with what is provided (eg https here)
@@ -42,6 +42,9 @@ services:
 
       # Adds this middleware to all routes, ex middlewareName@file for a file base middleware, middlewareName@docker for a docker base middleware
       - TRAEFIK_MAPPER_ADD_MIDDLEWARE_NAME=middlewareName@source
+
+      # Ignore routers for the middlewares. This can be usefull to filter out some domains
+      - TRAEFIK_MAPPER_IGNORE_MIDDLEWARE_SITES=some.domain.io;some.other.domain.io
 
       # Remove coolify itself from the list of services
       - TRAEFIK_MAPPER_FILTER_COOLIFY=true
@@ -61,10 +64,10 @@ networks:
 ```
 
 And then, in your Traefik config, add this url as a [http provider](https://doc.traefik.io/traefik/providers/http/#provider-configuration)
+
 > http://traefik-http-provider-mapper:8080/
 
 And then, you should have every Coolify provided routes in your Traefik instance ! :tada:
-
 
 ## How to work on it locally
 
@@ -90,13 +93,13 @@ yarn run test
 
 👤 **Beaussan**
 
-* Website: https://beaussan.io
-* Twitter: [@beaussan](https://twitter.com/beaussan)
-* Github: [@beaussan](https://github.com/beaussan)
+- Website: https://beaussan.io
+- Twitter: [@beaussan](https://twitter.com/beaussan)
+- Github: [@beaussan](https://github.com/beaussan)
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/beaussan/traefik-http-provider-mapper/issues). 
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/beaussan/traefik-http-provider-mapper/issues).
 
 ## Show your support
 

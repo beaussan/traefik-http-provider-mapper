@@ -10,6 +10,14 @@ const getStringFromEnv = (name: string): string | undefined => {
   const fullName = `TRAEFIK_MAPPER_${name}`;
   return process.env[fullName] ?? undefined;
 };
+
+const getStringArrayFromEnv = (name: string): string[] => {
+  const stringValue = getStringFromEnv(name);
+  if (!stringValue) {
+    return [];
+  }
+  return stringValue.split(';');
+};
 const getBooleanFromEnv = (name: string): boolean => {
   return getStringFromEnv(name) === 'true';
 };
@@ -19,6 +27,7 @@ const props: MapperProps = {
   newHttpEntrypointName: getStringFromEnv('NEW_HTTP_ENTRYPOINT'),
   newHttpsEntrypointName: getStringFromEnv('NEW_HTTPS_ENTRYPOINT'),
   addMiddleware: getStringFromEnv('ADD_MIDDLEWARE_NAME'),
+  ignoreMiddlewareSites: getStringArrayFromEnv('IGNORE_MIDDLEWARE_SITES'),
   removeCoolify: getBooleanFromEnv('FILTER_COOLIFY'),
   removeWwwMiddlewares: getBooleanFromEnv('FILTER_WWW_MIDDLEWARE'),
   removeHttpRouters: getBooleanFromEnv('FILTER_HTTP_ROUTERS'),
