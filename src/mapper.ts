@@ -127,10 +127,19 @@ const filterMiddlewares =
     };
   };
 
-const filterOutWwwMiddlewares = () =>
-  filterMiddlewares(
+const filterOutWwwMiddlewares = (): MapperFunction => (input) => {
+  let newDefinition = filterMiddlewares(
     (val, key) => !['redirect-to-non-www', 'redirect-to-www'].includes(key),
-  );
+  )(input);
+  newDefinition = routerMapper((router, name) => {
+    return {
+      ...router,
+      middlewares: router.middlewares.filter(middleware => !['redirect-to-non-www', 'redirect-to-www'].includes(middleware))
+    };
+  })(newDefinition);
+  return newDefinition;
+}
+
 
 const compose =
   (funcs: MapperFunction[]): MapperFunction =>

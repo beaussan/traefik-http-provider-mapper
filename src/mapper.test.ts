@@ -280,7 +280,14 @@ describe('mapper', () => {
   it('should filter out the www middlewares if asked to', () => {
     const mock: TraefikDefinition = {
       http: {
-        routers: {},
+        routers: {
+          'app': {
+            entrypoints: ['web'],
+            rule: 'Host(`dash-bis.example.io`) || Host(`www.dash-bis.example.io`)',
+            service: 'cl40a7hrx5046cwnkfy4c867q',
+            middlewares: ['redirect-to-http', 'redirect-to-https', 'redirect-to-non-www', 'redirect-to-www'],
+          },
+        },
         services: {},
         middlewares: {
           'redirect-to-http': {},
@@ -296,6 +303,13 @@ describe('mapper', () => {
     });
 
     expect(Object.values(result.http.middlewares)).toHaveLength(2);
+    expect(result.http.routers.app.middlewares).toHaveLength(2);
+    expect(result.http.routers.app.middlewares).toMatchInlineSnapshot(`
+      [
+        "redirect-to-http",
+        "redirect-to-https",
+      ]
+    `);
   });
 
   it('should work if all options are combined', () => {
